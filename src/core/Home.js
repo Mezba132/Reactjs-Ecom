@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Layout from "./Layout";
 import { getProducts } from "./CoreApi";
 import Card from './Card';
+import Search from './Search';
 
 const Home = () => {
 
@@ -44,6 +45,7 @@ const Home = () => {
         description="E-Commerce Site for NodeJS, ReactJS"
         className="container-fluid"
         >
+            <Search />
             <h2 className="mb-4">New Arrivals</h2>
             <div className="row">
                 {productByArrival.map((product, i) => {
