@@ -51,6 +51,15 @@
     background: #d9d9d9;
 }
 
+/* cart badge */
+.cart-badge, .cart-badge:hover {
+    border-radius: 70%;
+    background: blue;
+    padding: 2px;
+    font-size: 12px;
+    font-style: normal;
+}
+
 
 /**
 * jumbotron animation

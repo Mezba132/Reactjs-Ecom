@@ -1,9 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import { Link } from 'react-router-dom';
 import Layout from './Layout';
 import { getCategories, getFilteredProducts } from './CoreApi';
 import CheckBox from './CheckBox';
-import { prices, Prices } from './FixedPrices';
+import { prices } from './FixedPrices';
 import RadioBox from './RadioBox';
 import Card from './Card';
 
@@ -36,7 +35,7 @@ const Shop = () => {
         const newFilters = {...myFilters}; 
         newFilters.filters[filterBy] = filters;
 
-        if(filterBy == "price")
+        if(filterBy === "price")
         {
             let priceValues = handlePrices(filters);
             newFilters.filters[filterBy] = priceValues;
@@ -134,7 +133,7 @@ const Shop = () => {
                     {/* {JSON.stringify(filteredResult)} */}
                     <div className="row">
                         {filteredResult.map((product, i) => (
-                            <div className="col-3 mb-5">
+                            <div className="col-4 mb-5">
                                 <Card key={i} product={product}/>
                             </div>
                         ))}

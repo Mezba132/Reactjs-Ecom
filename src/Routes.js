@@ -11,6 +11,7 @@ import AdminDashboard from "./user/AdminDashboard";
 import AddCategory from './admin/AddCategory';
 import AddProduct from './admin/AddProduct';
 import Product from './core/product';
+import Cart from './core/Cart';
 
 const routes = () => (
     <BrowserRouter>
@@ -24,6 +25,7 @@ const routes = () => (
             <AdminRoute path='/admin/create/category' exact component={AddCategory} />
             <AdminRoute path='/admin/create/product' exact component={AddProduct} />
             <Route path='/product/:productId' exact component={Product} />
+            <Route path='/cart' exact component={Cart} />
         </Switch>
     </BrowserRouter>
 )
