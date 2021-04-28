@@ -1,5 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import { getBrainTreeClientToken, processPaymentMethod } from './CoreApi';
+import { 
+    getBrainTreeClientToken, 
+    processPaymentMethod, 
+    createOrder } from './CoreApi';
 import { isAuthenticate } from '../auth';
 import { emptyCart } from './CartHelpers'
 import { Link } from 'react-router-dom';
@@ -8,6 +11,7 @@ import DropIn from 'braintree-web-drop-in-react';
 const Checkout = ({ product }) => {
 
     const [data, setData] = useState({
+        isLoading: false,
         success : false,
         clientToken: null,
         error: '',
@@ -55,13 +59,16 @@ const Checkout = ({ product }) => {
         )
     }
 
+    const deliveryAddress = data.address
+
     const buy = () => {
         // send the nonce to your server
         // nonce = data.intance.requestPaymentMethod()
+        setData({ isLoading: true })
         let nonce;
         let getNonce = data.instance.requestPaymentMethod()
             .then(data => {
-                // console.log(data);
+                //console.log(data);
                 nonce = data.nonce;
                 // once you have nonce (card type, card number) send nonce as 'paymentMethodNonce'
                 // also total to be charged
@@ -75,18 +82,29 @@ const Checkout = ({ product }) => {
                     amount: getTotal(product)
                 }
 
-                console.log(paymentData);
-
                 processPaymentMethod(userId, token, paymentData)
                 .then(result => {
+                    // console.log(result)
                     if(result.error) {
-                        setData({...data, error: result.error})
+                        setData({...data, error: result.error, isLoading : false})
                     }
                     else {
-                        setData({...data, success: result.success})
-                        emptyCart(() => {
-                            console.log('Thanks dude');
+
+                        const createOrderData = {
+                            products: product,
+                            transaction_id: result.transaction.id,
+                            amount: result.transaction.amount,
+                            address: deliveryAddress
+                        }
+
+                        createOrder(userId, token, createOrderData)
+                        .then(response => {
+                            emptyCart(() => {
+                                console.log('Thanks dude');
+                                setData({ success: response.success, isLoading : false})
+                            })
                         })
+                        .catch(err => console.log(err))
                     }
                 })
                 .catch(err => console.log(err))
@@ -97,14 +115,24 @@ const Checkout = ({ product }) => {
             })
     }
 
+    const handleAddress = (event) => {
+        setData({...data, address: event.target.value })
+    }
+
     const showError = () => (
         <div className="alert alert-danger" style={{display : error ? '' : 'none'}}>
             {error}
         </div>
     )
 
-    const showSuccess = () => (
+    const showLoading = () => (
         <div className="alert alert-info" style={{display : success ? '' : 'none'}}>
+            Loading... Loading...
+        </div>
+    )
+
+    const showSuccess = () => (
+        <div className="alert alert-primary" style={{display : success ? '' : 'none'}}>
             Thank You! Your Payment was successful.
         </div>
     )
@@ -114,6 +142,15 @@ const Checkout = ({ product }) => {
         <div onBlur={() => setData({...data, error : ''})}>
             {data.clientToken !== null && product.length > 0 ? (
                 <div>
+                    <div className='gorm-group mb-3'>
+                        <label className='text-muted'>Delivery Address:</label>
+                        <textarea 
+                           onChange={handleAddress}
+                           className="form-control"
+                           value={data.address}
+                           placeholder="Your Delivery Address"
+                        />
+                    </div>
                     <DropIn options={{
                         authorization: data.clientToken
                     }} onInstance={instance => (data.instance = instance)} />
@@ -127,6 +164,7 @@ const Checkout = ({ product }) => {
         <div>
             <h1>Total Amount : {getTotal()} Tk</h1>
             <hr/>
+            {showLoading()}
             {showSuccess()}
             {showError()}
             { showCheckout() }
