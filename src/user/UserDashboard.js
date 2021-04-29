@@ -67,7 +67,7 @@ const Dashboard = () => {
                                             <div key={i}>
                                                 <h6>Product Name: {product.name}</h6>
                                                 <h6>Product Price: {product.price}</h6>
-                                                <h6>Product Date: {" "} {moment(product.createdAt).fromNow()}</h6>
+                                                <h6>Product Date: {moment(product.createdAt).fromNow()}</h6>
                                             </div>
                                         )
                                     })}                                    
@@ -81,20 +81,20 @@ const Dashboard = () => {
     )
 
     return (
-    <Layout title='DashBoard' description={`Hello ${name}`} className='container'>
-        <h1 className='mb-5'>Welcome to User Dashboard</h1>
+        <Layout title='DashBoard' description={`Hello ${name}`} className='container'>
+            <h1 className='mb-5'>Welcome to User Dashboard</h1>
 
-        <div className='row'>
-            <div className='col-3'>
-                {userLinks()}
+            <div className='row'>
+                <div className='col-3'>
+                    {userLinks()}
+                </div>
+                <div className='col-9'>
+                    {userInfo()}
+                    {purchaseHistory(history)}
+                </div>
             </div>
-            <div className='col-9'>
-                {userInfo()}
-                {purchaseHistory(history)}
-            </div>
-        </div>
 
-    </Layout>
+        </Layout>
 )}
 
 export default Dashboard;

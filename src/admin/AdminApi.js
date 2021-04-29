@@ -90,3 +90,54 @@ export const updateOrderStatus = (userId, token, orderId, status) => {
     })
     .catch(err => console.log(err))
 }
+
+export const getProducts = () => {
+    return fetch(`${API}/products?limit=50`, {
+        method: 'get'
+    })
+    .then(response => {
+        return response.json()
+    })
+    .catch(err => console.log(err))
+}
+
+export const getProduct = (productId) => {
+    return fetch(`${API}/product/${productId}`, {
+        method: 'get'
+    })
+    .then(response => {
+        return response.json()
+    })
+    .catch(err => console.log(err))
+}
+
+export const updateProducts = (productId, userId, token, productData) => {
+    return fetch(`${API}/product/${productId}/${userId}`, {
+        method:'put',
+        headers : {
+            Accept : 'application/json',
+            'Authorization' : `Bearer ${token}`
+        },
+        body: productData
+    })
+    .then(response => {
+        return response.json()
+    })
+    .catch(err => console.log(err))
+}
+
+export const deleteProduct = (productId, userId, token) => {
+    return fetch(`${API}/product/${productId}/${userId}`, {
+        method:'delete',
+        headers : {
+            Accept : 'application/json',
+            'Content-Type' : 'application/json',
+            'Authorization' : `Bearer ${token}`
+        }
+    })
+    .then(response => {
+        return response.json()
+    })
+    .catch(err => console.log(err))
+}
+
